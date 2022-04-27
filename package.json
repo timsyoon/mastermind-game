@@ -8,6 +8,7 @@
     "serverstart": "SET DEBUG=mastermind-game:* & npm run devstart"
   },
   "dependencies": {
+    "axios": "^0.27.1",
     "cookie-parser": "~1.4.4",
     "debug": "~2.6.9",
     "ejs": "~2.6.1",
