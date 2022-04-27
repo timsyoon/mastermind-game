@@ -12,26 +12,26 @@ const par_base = 10;
 const par_format = 'plain';
 const par_rnd = 'new';
 
-let secret_code;  // Sequence of 4 numbers
+let secret_code;            // Sequence of 4 numbers
 let guessesRemaining = 10;
-let board = [];
+let cracker_board = [];     // For storing the code cracker's responses & feedback
 
 // Board settings
-let num_rows = 11;  // 10 attempt rows + 1 answer row
-let num_cols = 8;   // 4 attempt columns + 4 feedback columns
+let num_rows = 10;          // 10 attempt rows
+let num_cols = 5;           // 4 attempt columns + 1 feedback column
 
 // Initialize the board
 for (let i = 0; i < num_rows; i++) {
-  board.push(new Array(num_cols));
+  cracker_board.push(new Array(num_cols));
 }
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
-  getRandomNumbers(res);
-  res.render('index', { title: 'Mastermind' });
+  getRandomNumbers();
+  res.render('index', { par_min: par_min, par_max: par_max });
 });
 
-function getRandomNumbers(res) {
+function getRandomNumbers() {
   // Make an HTTP GET request to the Random Integer Generator
   axios
     .get(`https://www.random.org/integers/?num=${par_num}&min=${par_min}&max=${par_max}&col=${par_col}&base=${par_base}&format=${par_format}&rnd=${par_rnd}`)

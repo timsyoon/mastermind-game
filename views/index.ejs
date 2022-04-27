@@ -1,11 +1,11 @@
 <!DOCTYPE html>
 <html>
   <head>
-    <title><%= title %></title>
+    <title>Mastermind</title>
     <link rel='stylesheet' href='stylesheets/style.css' />
   </head>
   <body>
-    <h1><%= title %></h1>
+    <h1>Mastermind</h1>
     <form>
       <table>
         <tbody>
@@ -333,10 +333,9 @@
       <caption>Number Bank</caption>
       <tbody>
         <tr>
-          <td>1</td>
-          <td>2</td>
-          <td>3</td>
-          <td>4</td>
+          <% for (let i = par_min; i <= par_max; i++) { %>
+            <td><%= i %></td>
+          <% } %>
         </tr>
       </tbody>
     </table>
