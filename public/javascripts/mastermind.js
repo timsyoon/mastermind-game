@@ -74,6 +74,7 @@ function checkCodes(row_code, secret_code, current_btn) {
         row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
         displayFeedbackPegs(row_feedback_pegs, current_btn);
         other_feedback_div.innerText = 'You won! You correctly guessed the pattern.';
+        revealCorrectPattern();
         isGameActive = false;
     }
     else {
@@ -81,6 +82,7 @@ function checkCodes(row_code, secret_code, current_btn) {
         displayFeedbackPegs(row_feedback_pegs, current_btn);
         if (current_row_index == 1) {
             other_feedback_div.innerText = 'You lost.. You have run out of remaining attempts.';
+            revealCorrectPattern();
             isGameActive = false;
         }
         else {
@@ -160,6 +162,13 @@ function displayFeedbackPegs(row_feedback_pegs, current_btn) {
     let second_row = feedback_table.children[0].children[1];
     second_row.children[0].innerText = row_feedback_pegs[2];
     second_row.children[1].innerText = row_feedback_pegs[3];
+}
+
+function revealCorrectPattern() {
+    let answer_row = document.getElementById('row0');
+    for (let i = 0; i < secret_code.length; i++) {
+        answer_row.children[i].innerText = secret_code[i];
+    }
 }
 
 function updateCheckButton(current_btn) {
