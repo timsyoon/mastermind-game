@@ -3,6 +3,8 @@
   <head>
     <title>Mastermind</title>
     <link rel='stylesheet' href='stylesheets/style.css' />
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/axios/0.27.1/axios.min.js" integrity="sha512-AzbhRn44jMMB3r+tBzw1apXgpDYtzqcA8KYXDR26a7PaTCjIwi/N6n0lyi8QnroHqn0DEUcQ6buOw22SBqh4VQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/lodash.js/4.17.21/lodash.min.js" integrity="sha512-WFN04846sdKMIP5LKNphMaWzU7YpMyCU245etK3g/2ARYbPK9Ub18eG+ljU96qKRCWh+quCY7yefSmlkQw1ANQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
   </head>
   <body>
     <h1>Mastermind</h1>
@@ -44,7 +46,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row2">
@@ -75,7 +77,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row3">
@@ -106,7 +108,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row4">
@@ -137,7 +139,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row5">
@@ -168,7 +170,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row6">
@@ -199,7 +201,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row7">
@@ -230,7 +232,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row8">
@@ -261,7 +263,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row9">
@@ -292,7 +294,7 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check" class="hidden">
+              <input type="button" value="Check" class="hidden check-btn">
             </td>
           </tr>
           <tr id="row10">
@@ -323,12 +325,13 @@
               </table>
             </td>
             <td>
-              <input type="button" value="Check">
+              <input type="button" value="Check" class="active check-btn">
             </td>
           </tr>
         </tbody>
       </table>
     </form>
+    <div id="other-feedback"></div>
     <table id="number-bank">
       <caption>Number Bank</caption>
       <tbody>
@@ -339,5 +342,6 @@
         </tr>
       </tbody>
     </table>
+    <script src='javascripts/mastermind.js' type='module'></script>
   </body>
 </html>
