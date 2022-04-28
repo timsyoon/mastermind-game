@@ -18,6 +18,7 @@ for (let i = 0; i < num_rows; i++) {
 window.addEventListener('DOMContentLoaded', () => {
     addClickListenersToCheckButtons();
     getSecretCode();
+    showRemainingAttempts();
 });
 
 function addClickListenersToCheckButtons() {
@@ -36,6 +37,12 @@ function getSecretCode() {
     .catch(error => {
         console.error(error);
     });
+}
+
+function showRemainingAttempts() {
+    let other_feedback_div = document.getElementById('other-feedback');
+    let attempt_string = current_row_index == 1 ? 'attempt' : 'attempts';
+    other_feedback_div.innerText = `Welcome to Mastermind! Use the numbers in the number bank below to guess the correct pattern. You have ${current_row_index} ${attempt_string} remaining.`;
 }
 
 function checkRow() {
@@ -73,12 +80,14 @@ function checkCodes(row_code, secret_code, current_btn) {
         row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
         displayFeedbackPegs(row_feedback_pegs, current_btn);
         if (current_row_index == 1) {
-            other_feedback_div.innerText = 'You lost.. You have run out of remaining attempts.'
+            other_feedback_div.innerText = 'You lost.. You have run out of remaining attempts.';
             isGameActive = false;
         }
         else {
             updateCheckButton(current_btn);
             current_row_index -= 1;
+            let attempt_string = current_row_index == 1 ? 'attempt' : 'attempts';
+            other_feedback_div.innerText = `You have ${current_row_index} remaining ${attempt_string}.`;
         }
     }
 }
