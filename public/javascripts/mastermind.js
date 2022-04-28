@@ -1,12 +1,12 @@
-let row_code = [];          // Sequence of 4 numbers
+let row_code = [];           // Sequence of 4 numbers
 let secret_code = [];
 let guessesRemaining = 10;
-let active_row = 0;
-let board = [];             // For storing the code cracker's responses & feedback
+let current_row_index = 10;  // Starting from the top of the table
+let board = [];              // For storing the player's responses & feedback
 
 // Board settings
-let num_rows = 10;          // 10 attempt rows
-let num_cols = 5;           // 4 attempt columns + 1 feedback column
+let num_rows = 10;           // 10 attempt rows
+let num_cols = 5;            // 4 attempt columns + 1 feedback column
 
 // Initialize the board
 for (let i = 0; i < num_rows; i++) {
@@ -14,9 +14,27 @@ for (let i = 0; i < num_rows; i++) {
 }
 
 window.addEventListener('DOMContentLoaded', () => {
-    let check_btn = document.querySelector('input.active');
-    check_btn.addEventListener('click', checkRow);
+    addClickListenersToCheckButtons();
+    getSecretCode();
 });
+
+function addClickListenersToCheckButtons() {
+    let check_buttons = document.querySelectorAll('.check-btn');
+    for (let i = 0; i < check_buttons.length; i++) {
+        check_buttons[i].addEventListener('click', checkRow);
+    }
+}
+
+function getSecretCode() {
+    axios
+    .get('/secret-code')
+    .then(resp => {
+        secret_code = resp.data;
+    })
+    .catch(error => {
+        console.error(error);
+    });
+}
 
 function checkRow() {
     let row = this.parentNode.parentNode;
@@ -28,22 +46,35 @@ function checkRow() {
         if (guess_val == '') {
             let other_feedback_div = document.getElementById('other-feedback');
             other_feedback_div.innerText = 'Please enter numbers in all the text fields for the current row.';
+            return;
         } else {
             row_code.push(guess_val);
         }
     }
-    // Check the current code against the secret code
-    axios
-      .get('/secret-code')
-      .then(resp => {
-          secret_code = resp.data;
-          if (_.isEqual(row_code, secret_code)) {
-              
-          } else {
-              
-          }
-      })
-      .catch(error => {
-          console.error(error);
-      });
+    checkCodes(row_code, secret_code, this);
+}
+
+function checkCodes(row_code, secret_code, current_btn) {
+    let other_feedback_div = document.getElementById('other-feedback');
+    if (_.isEqual(row_code, secret_code)) {
+        other_feedback_div.innerText = 'You won';
+    } else {
+        if (current_row_index == 1) {
+            other_feedback_div.innerText = 'You lost'
+        } else {
+            updateCheckButton(current_btn);
+            current_row_index -= 1;
+        }
+    }
+}
+
+function updateCheckButton(current_btn) {
+    // Make button in current row hidden
+    current_btn.classList.remove('active');
+    current_btn.classList.add('hidden');
+    // Make button in next row visible
+    let next_row = document.getElementById(`row${current_row_index - 1}`);
+    let next_btn = next_row.lastElementChild.children[0];
+    next_btn.classList.remove('hidden');
+    next_btn.classList.add('active');
 }
