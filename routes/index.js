@@ -25,7 +25,8 @@ router.get('/secret-code', function(req, res, next) {
   if (secret_code != undefined) {
     res.set('content-type', 'text/plain');
     res.send(JSON.stringify(secret_code));
-  } else {
+  }
+  else {
     generateRandomNumbersAndRespond(res);
   }
 });

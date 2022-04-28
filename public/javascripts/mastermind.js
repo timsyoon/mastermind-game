@@ -2,15 +2,17 @@ let row_code = [];           // Sequence of 4 numbers
 let secret_code = [];
 let guessesRemaining = 10;
 let current_row_index = 10;  // Starting from the top of the table
-let board = [];              // For storing the player's responses & feedback
+let board = [];              // For storing the player's responses
+let feedback_pegs = [];      // For storing feedback on the player's guesses
 
 // Board settings
-let num_rows = 10;           // 10 attempt rows
-let num_cols = 5;            // 4 attempt columns + 1 feedback column
+let num_rows = 10;
+let num_cols = 4;
 
-// Initialize the board
+// Initialize the board and feedback arrays
 for (let i = 0; i < num_rows; i++) {
   board.push(new Array(num_cols));
+  feedback_pegs.push(new Array(num_cols));
 }
 
 window.addEventListener('DOMContentLoaded', () => {
@@ -47,22 +49,27 @@ function checkRow() {
             let other_feedback_div = document.getElementById('other-feedback');
             other_feedback_div.innerText = 'Please enter numbers in all the text fields for the current row.';
             return;
-        } else {
+        }
+        else {
             row_code.push(guess_val);
         }
     }
+    board[current_row_index] = row_code;  // Store the guesses
     checkCodes(row_code, secret_code, this);
 }
 
 function checkCodes(row_code, secret_code, current_btn) {
     let other_feedback_div = document.getElementById('other-feedback');
     if (_.isEqual(row_code, secret_code)) {
+        generateGuessFeedback(row_code, secret_code);
         other_feedback_div.innerText = 'You won';
-    } else {
+    }
+    else {
         generateGuessFeedback(row_code, secret_code);
         if (current_row_index == 1) {
             other_feedback_div.innerText = 'You lost'
-        } else {
+        }
+        else {
             updateCheckButton(current_btn);
             current_row_index -= 1;
         }
@@ -70,7 +77,6 @@ function checkCodes(row_code, secret_code, current_btn) {
 }
 
 function generateGuessFeedback(row_code, secret_code) {
-    secret_code = ['4', '1', '4', '2'];
     let feedback_array = [];  // 'o' for correct number & location, 'x' for only correct number
     // Find counts of each number in the secret code
     let map_secret = new Map();
@@ -78,7 +84,8 @@ function generateGuessFeedback(row_code, secret_code) {
         let current_num = secret_code[i];
         if (!map_secret.has(current_num)) {
             map_secret.set(current_num, 1);
-        } else {
+        }
+        else {
             map_secret.set(current_num, map_secret.get(current_num) + 1);
         }
     }
@@ -106,8 +113,24 @@ function generateGuessFeedback(row_code, secret_code) {
     while (feedback_array.length < 4) {
         feedback_array.push('');
     }
-    console.log(feedback_array);
-    // todo: scramble the feedback
+    // Shuffle the array so that the feedback does not give away which numbers
+    // were an exact/partial/non match
+    fisherYates(feedback_array);
+    feedback_pegs[current_row_index] = feedback_array;  // Store the feedback
+}
+
+// Shuffle the array
+// From http://sedition.com/perl/javascript-fy.html
+function fisherYates (myArray) {
+    var i = myArray.length;
+    if (i == 0) return false;
+    while (--i) {
+        var j = Math.floor(Math.random() * (i + 1));
+        var tempi = myArray[i];
+        var tempj = myArray[j];
+        myArray[i] = tempj;
+        myArray[j] = tempi;
+    }
 }
 
 function updateCheckButton(current_btn) {
