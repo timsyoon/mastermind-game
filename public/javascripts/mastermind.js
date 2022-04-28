@@ -1,6 +1,6 @@
+let isGameActive = true;
 let row_code = [];           // Sequence of 4 numbers
 let secret_code = [];
-let guessesRemaining = 10;
 let current_row_index = 10;  // Starting from the top of the table
 let board = [];              // For storing the player's responses
 let feedback_pegs = [];      // For storing feedback on the player's guesses
@@ -39,6 +39,7 @@ function getSecretCode() {
 }
 
 function checkRow() {
+    if (!isGameActive) return;
     let row_element = this.parentNode.parentNode;
     let cell_elements = row_element.children;
     row_code = [];  // Clear any previous code
@@ -66,12 +67,14 @@ function checkCodes(row_code, secret_code, current_btn) {
         row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
         displayFeedbackPegs(row_feedback_pegs, current_btn);
         other_feedback_div.innerText = 'You won! You correctly guessed the pattern.';
+        isGameActive = false;
     }
     else {
         row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
         displayFeedbackPegs(row_feedback_pegs, current_btn);
         if (current_row_index == 1) {
             other_feedback_div.innerText = 'You lost.. You have run out of remaining attempts.'
+            isGameActive = false;
         }
         else {
             updateCheckButton(current_btn);
