@@ -40,3 +40,8 @@ table#number-bank {
 .hidden {
   visibility: hidden;
 }
+
+#other-feedback {
+  text-align: center;
+  margin-top: 20px;
+}
