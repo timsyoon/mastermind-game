@@ -1,7 +1,7 @@
 let isGameActive = true;
 let row_code = [];           // Sequence of 4 numbers
 let secret_code = [];
-let current_row_index = 10;  // Starting from the top of the table
+let current_row_index = 9;   // 0 = top guess row, 9 = bottom guess row
 let board = [];              // For storing the player's responses
 let feedback_pegs = [];      // For storing feedback on the player's guesses
 
@@ -11,14 +11,14 @@ let num_cols = 4;
 
 // Initialize the board and feedback arrays
 for (let i = 0; i < num_rows; i++) {
-  board.push(new Array(num_cols));
-  feedback_pegs.push(new Array(num_cols));
+  board.push([]);
+  feedback_pegs.push([]);
 }
 
 window.addEventListener('DOMContentLoaded', () => {
     addClickListenersToCheckButtons();
     getSecretCode();
-    showRemainingAttempts();
+    displayWelcomeText();
 });
 
 function addClickListenersToCheckButtons() {
@@ -39,10 +39,10 @@ function getSecretCode() {
     });
 }
 
-function showRemainingAttempts() {
+function displayWelcomeText() {
     let other_feedback_div = document.getElementById('other-feedback');
-    let attempt_string = current_row_index == 1 ? 'attempt' : 'attempts';
-    other_feedback_div.innerText = `Welcome to Mastermind! Use the numbers in the number bank below to guess the correct pattern. You have ${current_row_index} ${attempt_string} remaining.`;
+    let attempt_string = current_row_index == 0 ? 'attempt' : 'attempts';
+    other_feedback_div.innerText = `Welcome to Mastermind! Use the numbers in the number bank below to guess the correct pattern. You have ${current_row_index + 1} ${attempt_string} remaining.`;
 }
 
 function checkRow() {
@@ -63,6 +63,8 @@ function checkRow() {
     }
     board[current_row_index] = row_code;  // Store the guesses
     checkCodes(row_code, secret_code, this);
+    console.log(board);
+    console.log(feedback_pegs);
 }
 
 function checkCodes(row_code, secret_code, current_btn) {
@@ -80,7 +82,7 @@ function checkCodes(row_code, secret_code, current_btn) {
     else {
         row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
         displayFeedbackPegs(row_feedback_pegs, current_btn);
-        if (current_row_index == 1) {
+        if (current_row_index == 0) {
             other_feedback_div.innerText = 'You lost.. You have run out of remaining attempts.';
             revealCorrectPattern();
             isGameActive = false;
@@ -88,8 +90,8 @@ function checkCodes(row_code, secret_code, current_btn) {
         else {
             updateCheckButton(current_btn);
             current_row_index -= 1;
-            let attempt_string = current_row_index == 1 ? 'attempt' : 'attempts';
-            other_feedback_div.innerText = `You have ${current_row_index} remaining ${attempt_string}.`;
+            let attempt_string = current_row_index == 0 ? 'attempt' : 'attempts';
+            other_feedback_div.innerText = `You have ${current_row_index + 1} remaining ${attempt_string}.`;
         }
     }
 }
@@ -165,7 +167,7 @@ function displayFeedbackPegs(row_feedback_pegs, current_btn) {
 }
 
 function revealCorrectPattern() {
-    let answer_row = document.getElementById('row0');
+    let answer_row = document.getElementById('answer-row');
     for (let i = 0; i < secret_code.length; i++) {
         answer_row.children[i].innerText = secret_code[i];
     }
@@ -176,7 +178,7 @@ function updateCheckButton(current_btn) {
     current_btn.classList.remove('active');
     current_btn.classList.add('hidden');
     // Make button in next row visible
-    let next_row = document.getElementById(`row${current_row_index - 1}`);
+    let next_row = document.getElementById(`guess-row${current_row_index - 1}`);
     let next_btn = next_row.lastElementChild.children[0];
     next_btn.classList.remove('hidden');
     next_btn.classList.add('active');
