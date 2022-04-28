@@ -39,12 +39,11 @@ function getSecretCode() {
 }
 
 function checkRow() {
-    let row = this.parentNode.parentNode;
-    let cells = row.children;
+    let row_element = this.parentNode.parentNode;
+    let cell_elements = row_element.children;
     row_code = [];  // Clear any previous code
-    // Iterate num_cols - 1 times because one column is for feedback
-    for (let i = 0; i < num_cols - 1; i++) {
-        let guess_val = cells[i].children[0].value;
+    for (let i = 0; i < num_cols; i++) {
+        let guess_val = cell_elements[i].children[0].value;
         if (guess_val == '') {
             let other_feedback_div = document.getElementById('other-feedback');
             other_feedback_div.innerText = 'Please enter numbers in all the text fields for the current row.';
@@ -59,15 +58,20 @@ function checkRow() {
 }
 
 function checkCodes(row_code, secret_code, current_btn) {
+    
     let other_feedback_div = document.getElementById('other-feedback');
+    let row_feedback_pegs;
+    
     if (_.isEqual(row_code, secret_code)) {
-        generateGuessFeedback(row_code, secret_code);
-        other_feedback_div.innerText = 'You won';
+        row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
+        displayFeedbackPegs(row_feedback_pegs, current_btn);
+        other_feedback_div.innerText = 'You won! You correctly guessed the pattern.';
     }
     else {
-        generateGuessFeedback(row_code, secret_code);
+        row_feedback_pegs = generateFeedbackPegs(row_code, secret_code);
+        displayFeedbackPegs(row_feedback_pegs, current_btn);
         if (current_row_index == 1) {
-            other_feedback_div.innerText = 'You lost'
+            other_feedback_div.innerText = 'You lost.. You have run out of remaining attempts.'
         }
         else {
             updateCheckButton(current_btn);
@@ -76,8 +80,8 @@ function checkCodes(row_code, secret_code, current_btn) {
     }
 }
 
-function generateGuessFeedback(row_code, secret_code) {
-    let feedback_array = [];  // 'o' for correct number & location, 'x' for only correct number
+function generateFeedbackPegs(row_code, secret_code) {
+    let row_feedback_pegs = [];  // 'o' for correct number & location, 'x' for only correct number
     // Find counts of each number in the secret code
     let map_secret = new Map();
     for (let i = 0; i < secret_code.length; i++) {
@@ -90,33 +94,34 @@ function generateGuessFeedback(row_code, secret_code) {
         }
     }
     // Populate the feedback array
-    // We will let exact matches (represented by 'o') take precedence over partial matches
+    // We will let exact matches (represented by 'o' pegs) take precedence over partial matches
     for (let j = 0; j < row_code.length; j++) {
         let current_num = row_code[j];
         if (map_secret.has(current_num) && map_secret.get(current_num) > 0) {
             if (current_num == secret_code[j]) {
-                feedback_array.push('o');
+                row_feedback_pegs.push('o');
                 map_secret.set(current_num, map_secret.get(current_num) - 1);
             }
         }
     }
-    // Find partial matches
+    // Find partial matches (represented by 'x' pegs)
     for (let k = 0; k < row_code.length; k++) {
         let current_num = row_code[k];
         if (map_secret.has(current_num) && map_secret.get(current_num) > 0) {
             if (current_num != secret_code[k]) {
-                feedback_array.push('x');
+                row_feedback_pegs.push('x');
                 map_secret.set(current_num, map_secret.get(current_num) - 1);
             }
         }
     }
-    while (feedback_array.length < 4) {
-        feedback_array.push('');
+    while (row_feedback_pegs.length < 4) {
+        row_feedback_pegs.push('-');
     }
     // Shuffle the array so that the feedback does not give away which numbers
     // were an exact/partial/non match
-    fisherYates(feedback_array);
-    feedback_pegs[current_row_index] = feedback_array;  // Store the feedback
+    fisherYates(row_feedback_pegs);
+    feedback_pegs[current_row_index] = row_feedback_pegs;  // Store the feedback
+    return row_feedback_pegs;
 }
 
 // Shuffle the array
@@ -131,6 +136,18 @@ function fisherYates (myArray) {
         myArray[i] = tempj;
         myArray[j] = tempi;
     }
+}
+
+function displayFeedbackPegs(row_feedback_pegs, current_btn) {
+    let feedback_table = current_btn.parentNode.previousElementSibling.children[0];
+    
+    let first_row = feedback_table.children[0].children[0];
+    first_row.children[0].innerText = row_feedback_pegs[0];
+    first_row.children[1].innerText = row_feedback_pegs[1];
+
+    let second_row = feedback_table.children[0].children[1];
+    second_row.children[0].innerText = row_feedback_pegs[2];
+    second_row.children[1].innerText = row_feedback_pegs[3];
 }
 
 function updateCheckButton(current_btn) {
