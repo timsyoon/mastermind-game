@@ -29,7 +29,7 @@ table.feedback {
   border-spacing: 0;
 }
 
-table#number-bank {
+table#number-bank, table#symbol-key {
   margin-top: 20px;
 }
 
