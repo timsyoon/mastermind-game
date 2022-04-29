@@ -6,9 +6,10 @@ var GameSchema = new Schema(
   {
     board: { type: [[String]], required: true },
     feedbackPegs: { type: [[String]], required: true },
-    num_rows: { type: Number, required: true },
-    num_columns: { type: Number, required: true },
-    guessesRemaining: { type: Number, required: true },
+    secretCode: { type: [String], required: true },
+    numRows: { type: Number, required: true },
+    numColumns: { type: Number, required: true },
+    currentRowIndex: { type: Number, required: true },
     isGameActive: { type: Boolean, required: true }
   }
 );

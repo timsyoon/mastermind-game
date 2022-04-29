@@ -23,6 +23,12 @@ td {
   background-color: burlywood;
 }
 
+button#save-progress-btn {
+  display: block;
+  margin: 20px auto;
+  visibility: hidden;
+}
+
 table.feedback {
   margin-left: 0;
   margin-right: 0;

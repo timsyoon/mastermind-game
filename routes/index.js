@@ -1,9 +1,18 @@
-let DEBUG = true;
-
 var express = require('express');
 var router = express.Router();
 
-const axios = require('axios').default;
+var axios = require('axios').default;
+var async = require('async');
+var Game = require('../models/game');
+var game_controller = require('../controllers/gameController.js')
+
+// var mongoose = require('mongoose');
+
+// Set up mongoose connection
+// var mongoDB = 'insert_your_database_url_here';
+// mongoose.connect(mongoDB, { useNewUrlParser: true , useUnifiedTopology: true });
+// var db = mongoose.connection;
+// db.on('error', console.error.bind(console, 'MongoDB connection error:'));
 
 // API parameter values
 const par_num = 4;
@@ -14,6 +23,7 @@ const par_base = 10;
 const par_format = 'plain';
 const par_rnd = 'new';
 
+let DEBUG = true;
 let secret_code;
 
 /* GET home page. */
@@ -29,6 +39,10 @@ router.get('/secret-code', function(req, res, next) {
   else {
     generateRandomNumbersAndRespond(res);
   }
+});
+
+router.post('/games', function(req, res, next) {
+  game_controller.create_game(req, res);
 });
 
 function generateRandomNumbersAndRespond(res) {

@@ -24,15 +24,17 @@ class Game {
         }
     }
     beginGame() {
-        this.addClickListenersToCheckButtons();
+        this.addClickListenersToButtons();
         this.getSecretCode();
         this.displayWelcomeText();
     }
-    addClickListenersToCheckButtons() {
+    addClickListenersToButtons() {
         let check_buttons = document.querySelectorAll('.check-btn');
         for (let i = 0; i < check_buttons.length; i++) {
             check_buttons[i].addEventListener('click', this.checkRow);
         }
+        let save_button = document.getElementById('save-progress-btn');
+        save_button.addEventListener('click', this.saveProgress);
     }
     getSecretCode() {
         axios
@@ -165,6 +167,25 @@ class Game {
         let next_btn = next_row.lastElementChild.children[0];
         next_btn.classList.remove('hidden');
         next_btn.classList.add('active');
+    }
+    // Save the current game state to the database
+    saveProgress() {
+        axios
+        .post('/games', {
+            board: instance.board,
+            feedbackPegs: instance.feedback_pegs,
+            secretCode: instance.secret_code,
+            numRows: instance.num_rows,
+            numColumns: instance.num_cols,
+            currentRowIndex: instance.current_row_index,
+            isGameActive: instance.isGameActive
+        })
+        .then(resp => {
+            return;
+        })
+        .catch(error => {
+            console.error(error);
+        });
     }
 }
 
